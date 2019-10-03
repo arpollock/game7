@@ -1,0 +1,49 @@
+/* https://flatuicolors.com/palette/cn */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #dfe4ea;
+    color: #1e90ff;
+    padding: 0;
+    margin: 0;
+}
+#wrapper {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+.side {
+    background-color: #57606f;
+    color: #ffffff;
+    width: 20vw;
+}
+#main {
+    width: 60vw;
+    text-align: center;
+}
+#main, .side {
+    height: 100vh;
+    overflow: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+#game {
+    border: 2px solid #000000;
+    width: 90%;
+    height: 300px;
+    margin: auto;
+}
+#before-play {
+    position: absolute;
+    width: 500px;
+    height: 300px;
+    left: calc(50vw - 250px);
+    top: calc(50vh - 150px);
+    background-color: #2f3542;
+    color: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
