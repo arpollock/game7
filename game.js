@@ -8,33 +8,35 @@ var jumpVal = -7;
 var verticalSpeed = 0;
 var grav = 0.5;
 
+// General Game Variables
 var canvas = document.getElementById('game');
 var ctx = canvas.getContext('2d');
 var groundY = canvas.height * 2 / 3;
-var img = new Image();
-var img_width = 0;
-var img_height = 0;
+var hero = new Image();
+var hero_width = 0;
+var hero_height = 0;
 var x = canvas.width / 5;
 var y = groundY;
 var MOVE_VAL = 5;
+var score = 0;
 
-img.onload = function () {
-    img_height = 40; //img.height / 2;
-    img_width = 40 / img.height * img.width;
-    y -= img_height;
+hero.onload = function () {
+    hero_height = 40; //img.height / 2;
+    hero_width = 40 / hero.height * hero.width;
+    y -= hero_height;
 }
 
 function drawHero() {
-    ctx.drawImage(img, x, y, img_width, img_height);
+    ctx.drawImage(hero, x, y, hero_width, hero_height);
 }
 
 function drawBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'rgb(116, 125, 140)'; 
-    ctx.fillRect( 0, groundY, canvas.width, canvas.height * 1 / groundY);
+    ctx.fillRect( 0, groundY, canvas.width, canvas.height - groundY);
 }
 
-img.src = './images/hero/test.png';
+hero.src = './images/hero/test.png';
 
 function jump() {
     if (!jumping) {
@@ -80,13 +82,16 @@ function handleKeydown(event) {
 }
 
 function gameLoop() {
+	//Adding 1 to the score for each gameLoop
+	score = score + 1;
+	console.log(`score: ${score}`);
     // Falling
     verticalSpeed = verticalSpeed + grav
     y = y + verticalSpeed;
     // Don't fall through ground
-    if ( y + img_height >= groundY ) {
+    if ( y + hero_height >= groundY ) {
         jumping = false;
-        y = groundY - img_height;
+        y = groundY - hero_height;
         verticalSpeed = 0;
     }
     drawBackground();
@@ -96,7 +101,7 @@ function gameLoop() {
 }
 
 $(document).ready( function() {
+	update_scores();
     $(this).keydown(handleKeydown);
     // gameLoop();
-    console.log(groundY);
 });
