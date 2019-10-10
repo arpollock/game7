@@ -1,10 +1,10 @@
 var playing = false;
-var fps = 200;
+var fps = 30;
 // var jumpHeight = 20;
 
 // Jumping/Falling Variables
 var jumping = false;
-var jumpVal = -6;
+var jumpVal = -7;
 var verticalSpeed = 0;
 var grav = 0.5;
 
@@ -37,16 +37,10 @@ function drawBackground() {
 img.src = './images/hero/test.png';
 
 function jump() {
-//    if (y >= (groundY + img_height)) {
-//         y -= jumpHeight;
-//         drawBackground();
-//         drawHero();
-//    }
     if (!jumping) {
+        y = y - 1; // so doesn't just get reset with ground collision
         jumping = true;
         verticalSpeed = jumpVal;
-    } else if( y + img_height === groundY ) { // can only jump once
-        verticalSpeed = 0;
     }
 }
 
@@ -86,25 +80,19 @@ function handleKeydown(event) {
 }
 
 function gameLoop() {
-    if ( y + img_height >= groundY ) {
-        jumping = false;
-        // y = groundY - img_height;
-        verticalSpeed = 0;
-    }
     // Falling
     verticalSpeed = verticalSpeed + grav
-    // if( y + img_height + verticalSpeed === groundY ){ // is there a collision?
-    //     // yes, don't fall completely, fall to floor 
-    //     // while( !(y + img_height + verticalSpeed === groundY) ){
-    //     //     y = y + Math.sign(verticalSpeed);
-    //     // }
-    //     verticalSpeed = 0;
-    // }
     y = y + verticalSpeed;
+    // Don't fall through ground
+    if ( y + img_height >= groundY ) {
+        jumping = false;
+        y = groundY - img_height;
+        verticalSpeed = 0;
+    }
     drawBackground();
     drawHero();
     setTimeout(gameLoop, fps);
-    console.log(`jumping: ${jumping}`)
+    // console.log(`jumping: ${jumping}`)
 }
 
 $(document).ready( function() {
