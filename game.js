@@ -84,7 +84,6 @@ function handleKeydown(event) {
 function gameLoop() {
 	//Adding 1 to the score for each gameLoop
 	score = score + 1;
-	console.log(`score: ${score}`);
     // Falling
     verticalSpeed = verticalSpeed + grav
     y = y + verticalSpeed;
