@@ -18,6 +18,7 @@ var img_height = 0;
 var x = canvas.width / 5;
 var y = groundY;
 var MOVE_VAL = 5;
+var score = 0;
 
 img.onload = function () {
     img_height = 40; //img.height / 2;
@@ -81,6 +82,9 @@ function handleKeydown(event) {
 }
 
 function gameLoop() {
+	//Adding 1 to the score for each gameLoop
+	score = score + 1;
+	console.log(`score: ${score}`);
     // Falling
     verticalSpeed = verticalSpeed + grav
     y = y + verticalSpeed;
@@ -100,5 +104,4 @@ $(document).ready( function() {
 	update_scores();
     $(this).keydown(handleKeydown);
     // gameLoop();
-    console.log(groundY);
 });
