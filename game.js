@@ -20,16 +20,55 @@ var hero_width = 0;
 var hero_height = 0;
 var x = canvas.width / 5;
 var y = groundY;
-var MOVE_VAL = 5;
 
 hero.onload = function () {
     hero_height = 40; //img.height / 2;
     hero_width = 40 / hero.height * hero.width;
     y -= hero_height;
 }
+hero.src = './images/hero/test.png';
+
+// Obstacle Sprite Vars
+var obstRate = canvas.width / 5;
+var obst_speed = 6;
+
+var obst1 = new Image();
+var obst1_width = 0;
+var obst1_height = 0;
+var obst1_x = canvas.width;
+var obst1_y = 0; 
+
+var obst2 = new Image();
+var obst2_width = 0;
+var obst2_height = 0;
+var obst2_x = canvas.width * 1.5;
+var obst2_y = 0; 
+
+function getRandY(img_height) {
+    return Math.random() * (groundY-img_height);
+}
+
+obst1.onload = function () {
+    obst1_height = 20; //img.height / 2;
+    obst1_width = 20 / obst1.height * obst1.width;
+    obst1_y = getRandY(obst1_height);
+}
+obst1.src = './images/obst1.png';
+
+obst2.onload = function () {
+    obst2_height = 20; //img.height / 2;
+    obst2_width = 20 / obst2.height * obst2.width;
+    obst2_y = getRandY(obst2_height);
+}
+obst2.src = './images/obst2.png';
 
 function drawHero() {
     ctx.drawImage(hero, x, y, hero_width, hero_height);
+}
+
+function drawObsts() {
+    ctx.drawImage(obst1, obst1_x, obst1_y, obst1_width, obst1_height);
+    ctx.drawImage(obst2, obst2_x, obst2_y, obst2_width, obst2_height);
 }
 
 function drawBackground() {
@@ -37,8 +76,6 @@ function drawBackground() {
     ctx.fillStyle = 'rgb(116, 125, 140)'; 
     ctx.fillRect( 0, groundY, canvas.width, canvas.height - groundY);
 }
-
-hero.src = './images/hero/test.png';
 
 function jump() {
     if (!jumping) {
@@ -95,7 +132,19 @@ function gameLoop() {
         y = groundY - hero_height;
         verticalSpeed = 0;
     }
+    // Move Obstacles
+    obst1_x -= obst_speed;
+    if(obst1_x < 0 - obst1.width) {
+        obst1_x = canvas.width + obstRate;
+        obst1_y = getRandY(obst1_height);
+    }
+    obst2_x -= obst_speed;
+    if(obst2_x < 0 - obst2.width) {
+        obst2_x = canvas.width + obstRate;
+        obst2_y = getRandY(obst2_height);
+    }
     drawBackground();
+    drawObsts();
     drawHero();
     setTimeout(gameLoop, fps);
     // console.log(`jumping: ${jumping}`)
