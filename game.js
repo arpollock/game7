@@ -30,7 +30,7 @@ hero.onload = function () {
 hero.src = './images/hero/test.png';
 
 // Obstacle Sprite Vars
-var obstRate = canvas.width / 5;
+// var obstRate = canvas.width / 5;
 var obst_speed = 6;
 
 var obst1 = new Image();
@@ -47,6 +47,10 @@ var obst2_y = 0;
 
 function getRandY(img_height) {
     return Math.random() * (groundY-img_height);
+}
+
+function getRandX(){
+    return canvas.width + Math.random() * canvas.width;
 }
 
 obst1.onload = function () {
@@ -143,21 +147,23 @@ function gameLoop() {
     // Move Obstacles
     obst1_x -= obst_speed;
     if(obst1_x < 0 - obst1.width) {
-        obst1_x = canvas.width + obstRate;
+        obst1_x = canvas.width + getRandX();
         obst1_y = getRandY(obst1_height);
+        obst_speed *= 1.05; // obstacles get faster over time
     }
     obst2_x -= obst_speed;
     if(obst2_x < 0 - obst2.width) {
-        obst2_x = canvas.width + obstRate;
+        obst2_x = canvas.width + getRandX();
         obst2_y = getRandY(obst2_height);
     }
+    
     drawBackground();
     drawObsts();
     drawHero();
 	if(!playing) {
 		gameFinished();
 	} else {
-    setTimeout(gameLoop, fps);
+        setTimeout(gameLoop, fps);
 	}
     // console.log(`jumping: ${jumping}`)
 }
