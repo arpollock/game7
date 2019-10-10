@@ -103,7 +103,6 @@ function gameLoop() {
     }
     drawBackground();
     drawHero();
-	if(score > 150) {playing = false;}
 	if(!playing) {
 		gameFinished();
 	} else {
