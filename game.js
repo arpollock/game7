@@ -4,21 +4,23 @@ var fps = 30;
 
 // Jumping/Falling Variables
 var jumping = false;
-var jumpVal = -7;
+var jumpVal = -8;
 var verticalSpeed = 0;
 var grav = 0.5;
 
 // General Game Variables
 var canvas = document.getElementById('game');
 var ctx = canvas.getContext('2d');
-var groundY = canvas.height * 2 / 3;
+var groundY = canvas.height * 4 / 5;
+var score = 0;
+
+// Hero Sprite Vars
 var hero = new Image();
 var hero_width = 0;
 var hero_height = 0;
 var x = canvas.width / 5;
 var y = groundY;
 var MOVE_VAL = 5;
-var score = 0;
 
 hero.onload = function () {
     hero_height = 40; //img.height / 2;
