@@ -8,6 +8,7 @@ var jumpVal = -7;
 var verticalSpeed = 0;
 var grav = 0.5;
 
+// General Game Variables
 var canvas = document.getElementById('game');
 var ctx = canvas.getContext('2d');
 var groundY = canvas.height * 2 / 3;
@@ -31,7 +32,7 @@ function drawHero() {
 function drawBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'rgb(116, 125, 140)'; 
-    ctx.fillRect( 0, groundY, canvas.width, canvas.height * 1 / groundY);
+    ctx.fillRect( 0, groundY, canvas.width, canvas.height-groundY);
 }
 
 img.src = './images/hero/test.png';
