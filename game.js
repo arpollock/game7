@@ -75,5 +75,6 @@ function handleKeydown(event) {
 }
 
 $(document).ready( function() {
+	update_scores();
     $(this).keydown(handleKeydown);
 });
