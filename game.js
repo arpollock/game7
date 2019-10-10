@@ -1,4 +1,5 @@
 var playing = false;
+var gameover = false;
 var fps = 30;
 // var jumpHeight = 20;
 
@@ -67,7 +68,7 @@ function handleKeydown(event) {
                 break;
             case 32: // space
                 event.preventDefault(); // keep page from scrolling
-                if(!playing) {
+                if(!playing && !gameover) {
                     playing = true;
                     $('#before_play').hide();
                     gameLoop();
@@ -79,6 +80,13 @@ function handleKeydown(event) {
                 break;
         }
     }
+}
+
+function gameFinished() {
+	gameover = true;
+	$("#p_score").text(`You scored: ${score} points`)
+	$('#after_play').show();
+	highscore(score);
 }
 
 function gameLoop() {
@@ -95,7 +103,12 @@ function gameLoop() {
     }
     drawBackground();
     drawHero();
+	if(score > 150) {playing = false;}
+	if(!playing) {
+		gameFinished();
+	} else {
     setTimeout(gameLoop, fps);
+	}
     // console.log(`jumping: ${jumping}`)
 }
 
