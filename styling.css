@@ -47,6 +47,19 @@ body {
     box-sizing: border-box;
     text-align: center;
 }
+#after_play {
+	display: none;
+	position: absolute;
+    width: 500px;
+    height: 300px;
+    left: calc(50vw - 250px);
+    top: calc(50vh - 150px);
+    background-color: #2f3542;
+    color: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
 
 #rules li {
     margin-top: 25%;
