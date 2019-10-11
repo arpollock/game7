@@ -4,11 +4,16 @@ var gameover = false;
 var fps = 30;
 var powerupTime = 8000;
 var canvas = document.getElementById('game');
+// Fix Blurry Rendering from https://stackoverflow.com/questions/15661339/how-do-i-fix-blurry-text-in-my-html5-canvas
+canvas.width = 1000; // horizontal resolution
+canvas.height = 400; // vertical resolution
+canvas.style.width = 1000; // actual width of canvas
+canvas.style.height = 400; // actual height of canvas
 var ctx = canvas.getContext('2d');
 var groundY = canvas.height * 4 / 5;
 ctx.font = "12px Arial";
 var score = 0;
-var sprite_control = 40;
+var sprite_control = 100;
 var initialPowerup = Math.random() * powerupTime / 10 + powerupTime;
 var powerupPoints = 100;
 var powerupSpawned = false;
@@ -16,11 +21,12 @@ var showPowerupText = false;
 var floorColor = 'rgb(116, 125, 140)'; 
 
 // Jumping/Falling Variables
-var jumping = false;
+var jumps = 0;
+const MAX_JUMPS = 2;
 var ducking = false;
-var jumpVal = -8;
+var jumpVal = -12;
 var verticalSpeed = 0;
-var grav = 0.5;
+var grav = 0.6;
 
 // Hero Sprite Vars
 var hero = new Image();
@@ -33,7 +39,7 @@ const numHeroSprites = 4;
 hero.src = './images/hero/1.png';
 
 // Obstacle Sprite Vars
-var obst_speed = 6;
+var obst_speed = 12;
 
 var obst1 = new Image();
 var obst1_width = 0;
@@ -126,7 +132,7 @@ function animateHero() {
 }
 
 function animatePowerup() {
-    let animateTime = 200;
+    let animateTime = 300;
     showPowerupText = true;
     $('#main').addClass('pulse');
     floorColor = 'rgb(255, 255, 255)'; 
@@ -177,9 +183,9 @@ function collision( oX, oY, oWidth, oHeight, tolerance, good_collision ) {
 }
 
 function jump() {
-    if (!jumping) {
+    if (jumps < MAX_JUMPS) {
         y = y - 1; // so doesn't just get reset with ground collision
-        jumping = true;
+        jumps++;
         verticalSpeed = jumpVal;
     }
 }
@@ -247,7 +253,7 @@ function gameLoop() {
     y = y + verticalSpeed;
     // Don't fall through ground
     if ( y + hero_height >= groundY ) {
-        jumping = false;
+        jumps = 0;
         y = groundY - hero_height;
         verticalSpeed = 0;
     }
