@@ -1,9 +1,18 @@
 // Game Control Variables
 var playing = false;
 var gameover = false;
-var spawned = false;
 var fps = 30;
-var powerupTime = 4000;
+var powerupTime = 8000;
+var canvas = document.getElementById('game');
+var ctx = canvas.getContext('2d');
+var groundY = canvas.height * 4 / 5;
+var score = 0;
+var sprite_control = 40;
+var initialPowerup = Math.random() * powerupTime / 10 + powerupTime;
+var powerupPoints = 100;
+var powerupSpawned = false;
+var showPowerupText = false;
+var floorColor = 'rgb(116, 125, 140)'; 
 
 // Jumping/Falling Variables
 var jumping = false;
@@ -12,27 +21,15 @@ var jumpVal = -8;
 var verticalSpeed = 0;
 var grav = 0.5;
 
-// General Game Variables
-var canvas = document.getElementById('game');
-var ctx = canvas.getContext('2d');
-var groundY = canvas.height * 4 / 5;
-var score = 0;
-var sprite_control = 40;
-var initialPowerup = 0;
-
 // Hero Sprite Vars
 var hero = new Image();
 var hero_width = 0;
 var hero_height = 0;
 var x = canvas.width / 4;
 var y = groundY;
-
-hero.onload = function () {
-    hero_height = sprite_control; 
-    hero_width = sprite_control / hero.height * hero.width;
-    y -= hero_height;
-}
-hero.src = './images/hero/test.png';
+var heroSprite = 1;
+const numHeroSprites = 4;
+hero.src = './images/hero/1.png';
 
 // Obstacle Sprite Vars
 var obst_speed = 6;
@@ -51,13 +48,40 @@ var obst2_x = canvas.width * 1.5;
 var obst2_y = 0; 
 obst2.src = './images/obst2.png';
 
+// Power Up Sprite Vars
 var powerup = new Image();
 var powerup_width = 0;
 var powerup_height = 0;
-var powerup_x = canvas.width;
+var powerup_x = 0;
 var powerup_y = 0; 
-obst2.src = './images/power.png';
+powerup.src = './images/power.png';
 
+var powerup_text = new Image();
+var powerup_text_width = 0;
+var powerup_text_height = 0;
+var powerup_text_x = canvas.width / 2;
+var powerup_text_y = 10; 
+powerup_text.onload = function() {
+    powerup_text_width = canvas.width - 40;
+    powerup_text_height = powerup_text_width / powerup_text.width * powerup_text.height;
+    powerup_text_x -= powerup_text_width / 2;
+}
+powerup_text.src = './images/power_text.png';
+
+function loadImages() {
+    hero_height = sprite_control; 
+    hero_width = sprite_control / hero.height * hero.width;
+    y -= hero_height;
+    obst1_height = sprite_control / 2;
+    obst1_width = sprite_control / 2 / obst1.height * obst1.width;
+    obst1_y = getRandY(obst1_height);
+    obst2_height = sprite_control / 2;
+    obst2_width = sprite_control / 2 / obst2.height * obst2.width;
+    obst2_y = getRandY(obst2_height);
+    powerup_height = sprite_control / 2;
+    powerup_width = sprite_control / 2 / powerup.height * powerup.width;
+    animateHero();
+}
 
 function getRandY(img_height) {
     return Math.random() * (groundY-img_height);
@@ -79,38 +103,76 @@ function drawObsts() {
     ctx.drawImage(obst1, obst1_x, obst1_y, obst1_width, obst1_height);
     ctx.drawImage(obst2, obst2_x, obst2_y, obst2_width, obst2_height);
 }
+
 function drawPowerup() {
 	ctx.drawImage(powerup, powerup_x, powerup_y, powerup_width, powerup_height); 
 }
 
 function spawnPowerup() {
+    powerupSpawned = true;
 	powerup_x = canvas.width + getRandX();
 	powerup_y = getRandY(powerup_height);
-	powerup.src = './images/power.png';
-	
-	drawPowerup();
-	setTimeout(spawnPowerup,powerupTime);
+}
+
+function animateHero() {
+    let baseFname = `./images/hero/${heroSprite}`;
+    hero.src = ducking ? `${baseFname}d.png` : `${baseFname}.png`;
+    heroSprite++;
+    if(heroSprite > numHeroSprites) {
+        heroSprite = 1;
+    }
+    setTimeout( animateHero, fps * (1 / obst_speed) * fps);
+}
+
+function animatePowerup() {
+    // TODO
+    let animateTime = 200;
+    showPowerupText = true;
+    $('#main').addClass('pulse');
+    floorColor = 'rgb(255, 255, 255)'; 
+    setTimeout( function() {
+        $('#main').removeClass('pulse');
+        floorColor = 'rgb(116, 125, 140)'; 
+        setTimeout( function() {
+            $('#main').addClass('pulse');
+            floorColor = 'rgb(255, 255, 255)'; 
+            setTimeout( function() {
+                $('#main').removeClass('pulse');
+                floorColor = 'rgb(116, 125, 140)'; 
+            }, animateTime);
+        }, animateTime);
+    }, animateTime);
+    setTimeout( function() {
+        showPowerupText = false;
+    }, animateTime * 3);
 }
 
 function drawBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgb(116, 125, 140)'; 
+    ctx.fillStyle = floorColor;
     ctx.fillRect( 0, groundY, canvas.width, canvas.height - groundY);
 }
 
 function collision( oX, oY, oWidth, oHeight, tolerance, good_collision ) {
     let width = hero_width;
     let height = hero_height;
-    if (ducking) {
-        width /= 2;
-        height /= 2;
+    let y_c = y;
+    if ( ducking ) {
+        width = Math.floor(width / 2);
+        height = Math.floor(height / 2);
+        y_c += height;
     }
     if( x < oX + oWidth - tolerance && x + width > oX + tolerance &&
-        y < oY + oHeight - tolerance && y + height > oY + tolerance ) { // collision detected
-            if (!good_collision) {
-                playing = false;
-            } // TODO: put power up collision result here
+            y_c < oY + oHeight - tolerance && y_c + height > oY + tolerance ) { // collision detected
+        if (!good_collision) {
+            playing = false;
+        } else {
+            score += powerupPoints;
+            powerupSpawned = false;
+            setTimeout( spawnPowerup, Math.random() * powerupTime + 10000 );
+            animatePowerup();
         }
+    }
 }
 
 function jump() {
@@ -154,15 +216,10 @@ function handleKeydown(event) {
             case 32: // space
                 event.preventDefault(); // keep page from scrolling
                 if(!playing && !gameover) {
-                    obst1_height = sprite_control / 2;
-                    obst1_width = sprite_control / 2 / obst1.height * obst1.width;
-                    obst1_y = getRandY(obst1_height);
-                    obst2_height = sprite_control / 2;
-                    obst2_width = sprite_control / 2 / obst2.height * obst2.width;
-                    obst2_y = getRandY(obst2_height);
+                    loadImages();
                     playing = true;
                     $('#before_play').hide();
-					initialPowerup = Math.random() * 1000;
+                    setTimeout(spawnPowerup, initialPowerup);
                     gameLoop();
                 } else {
                     jump();
@@ -175,7 +232,7 @@ function handleKeydown(event) {
 }
 
 function gameFinished() {
-	$("#p_score").text(`You scored: ${score} points`)
+	$('#p_score').text(`You scored: ${score} points`)
     $('#after_play').show();
     gameover = true;
 	highscore(score);
@@ -193,7 +250,7 @@ function gameLoop() {
         y = groundY - hero_height;
         verticalSpeed = 0;
     }
-    // Move Obstacles
+    // Move Obstacles + Power Up
     obst1_x -= obst_speed;
     if(obst1_x < 0 - obst1_width) {
         obst1_x = canvas.width + getRandX();
@@ -207,12 +264,14 @@ function gameLoop() {
         obst2_y = getRandY(obst2_height);
         obst2.src = './images/obst2.png';
     }
-	
-	powerup_x -= obst_speed;
-	if(score > initialPowerup) {
-		spawnPowerup();
-	}
-
+    powerup_x -= obst_speed;
+    if(powerupSpawned && powerup_x < 0 - powerup_width) {
+        powerupSpawned = false;
+        setTimeout( spawnPowerup, Math.random() * powerupTime + 10000 );
+    }
+    if ( obst1_x < obst2_x + obst2_width + 10 && obst1_x + obst1_width > obst2_width - 10 ) {
+        obst2_x += canvas.width / 10;
+    }
     // Change to Clear Sprites
     if ( obst1_x + obst1_width / 2 < x ) {
         obst1.src = './images/clear1.png';
@@ -222,14 +281,21 @@ function gameLoop() {
     }
     
     drawBackground();
+    if (showPowerupText) {
+        ctx.drawImage(powerup_text, powerup_text_x, powerup_text_y, powerup_text_width, powerup_text_height); 
+    }
     drawObsts();
+    if( powerupSpawned ) {
+        drawPowerup();
+    }
     drawHero();
-    collision(obst1_x,obst1_y,obst1_width,obst1_height,5);
-    collision(obst2_x,obst2_y,obst2_width,obst2_height,5);
-	if(!playing) {
-		gameFinished();
+    collision( obst1_x, obst1_y, obst1_width, obst1_height, 3, false);
+    collision( obst2_x, obst2_y, obst2_width, obst2_height, 3, false);
+    collision( powerup_x, powerup_y, powerup_width, powerup_height, -2, true);
+	if(playing) {
+		setTimeout(gameLoop, fps);
 	} else {
-        setTimeout(gameLoop, fps);
+        gameFinished();
 	}
 }
 
