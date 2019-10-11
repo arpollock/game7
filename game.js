@@ -82,6 +82,10 @@ function drawBackground() {
     ctx.fillRect( 0, groundY, canvas.width, canvas.height - groundY);
 }
 
+function collision(oX,oY,oWidth,oHeight) {
+	if() { playing = false; }
+}
+
 function jump() {
     if (!jumping) {
         y = y - 1; // so doesn't just get reset with ground collision
@@ -160,6 +164,7 @@ function gameLoop() {
     drawBackground();
     drawObsts();
     drawHero();
+	collision(obst1_x,obst1_y,obst1_width,obst1_height);
 	if(!playing) {
 		gameFinished();
 	} else {
