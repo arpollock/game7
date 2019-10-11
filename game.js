@@ -98,8 +98,19 @@ function drawBackground() {
     ctx.fillRect( 0, groundY, canvas.width, canvas.height - groundY);
 }
 
-function collision(oX,oY,oWidth,oHeight) {
-	if(false) { playing = false; }
+function collision( oX, oY, oWidth, oHeight, tolerance, good_collision ) {
+    let width = hero_width;
+    let height = hero_height;
+    if (ducking) {
+        width /= 2;
+        height /= 2;
+    }
+    if( x < oX + oWidth - tolerance && x + width > oX + tolerance &&
+        y < oY + oHeight - tolerance && y + height > oY + tolerance ) { // collision detected
+            if (!good_collision) {
+                playing = false;
+            } // TODO: put power up collision result here
+        }
 }
 
 function jump() {
@@ -164,9 +175,9 @@ function handleKeydown(event) {
 }
 
 function gameFinished() {
-	gameover = true;
 	$("#p_score").text(`You scored: ${score} points`)
-	$('#after_play').show();
+    $('#after_play').show();
+    gameover = true;
 	highscore(score);
 }
 
@@ -214,7 +225,8 @@ function gameLoop() {
     drawBackground();
     drawObsts();
     drawHero();
-	collision(obst1_x,obst1_y,obst1_width,obst1_height);
+    collision(obst1_x,obst1_y,obst1_width,obst1_height,5);
+    collision(obst2_x,obst2_y,obst2_width,obst2_height,5);
 	if(!playing) {
 		gameFinished();
 	} else {
