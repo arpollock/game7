@@ -95,7 +95,7 @@ function getRandY(img_height) {
 }
 
 function getRandX(){
-    return canvas.width + Math.random() * canvas.width;
+    return canvas.width + Math.random() * canvas.width / 2;
 }
 
 function drawHero() {
