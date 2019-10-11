@@ -1,7 +1,9 @@
 // Game Control Variables
 var playing = false;
 var gameover = false;
+var spawned = false;
 var fps = 30;
+var powerupTime = 4000;
 
 // Jumping/Falling Variables
 var jumping = false;
@@ -16,6 +18,7 @@ var ctx = canvas.getContext('2d');
 var groundY = canvas.height * 4 / 5;
 var score = 0;
 var sprite_control = 40;
+var initialPowerup = 0;
 
 // Hero Sprite Vars
 var hero = new Image();
@@ -48,6 +51,14 @@ var obst2_x = canvas.width * 1.5;
 var obst2_y = 0; 
 obst2.src = './images/obst2.png';
 
+var powerup = new Image();
+var powerup_width = 0;
+var powerup_height = 0;
+var powerup_x = canvas.width;
+var powerup_y = 0; 
+obst2.src = './images/power.png';
+
+
 function getRandY(img_height) {
     return Math.random() * (groundY-img_height);
 }
@@ -68,6 +79,18 @@ function drawObsts() {
     ctx.drawImage(obst1, obst1_x, obst1_y, obst1_width, obst1_height);
     ctx.drawImage(obst2, obst2_x, obst2_y, obst2_width, obst2_height);
 }
+function drawPowerup() {
+	ctx.drawImage(powerup, powerup_x, powerup_y, powerup_width, powerup_height); 
+}
+
+function spawnPowerup() {
+	powerup_x = canvas.width + getRandX();
+	powerup_y = getRandY(powerup_height);
+	powerup.src = './images/power.png';
+	
+	drawPowerup();
+	setTimeout(spawnPowerup,powerupTime);
+}
 
 function drawBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -76,7 +99,7 @@ function drawBackground() {
 }
 
 function collision(oX,oY,oWidth,oHeight) {
-	if() { playing = false; }
+	if(false) { playing = false; }
 }
 
 function jump() {
@@ -128,6 +151,7 @@ function handleKeydown(event) {
                     obst2_y = getRandY(obst2_height);
                     playing = true;
                     $('#before_play').hide();
+					initialPowerup = Math.random() * 1000;
                     gameLoop();
                 } else {
                     jump();
@@ -160,19 +184,24 @@ function gameLoop() {
     }
     // Move Obstacles
     obst1_x -= obst_speed;
-    if(obst1_x < 0 - obst1.width) {
+    if(obst1_x < 0 - obst1_width) {
         obst1_x = canvas.width + getRandX();
         obst1_y = getRandY(obst1_height);
         obst_speed *= 1.05; // obstacles get faster over time
         obst1.src = './images/obst1.png'; // change sprite back to obstacle
     }
     obst2_x -= obst_speed;
-    if(obst2_x < 0 - obst2.width) {
+    if(obst2_x < 0 - obst2_width) {
         obst2_x = canvas.width + getRandX();
         obst2_y = getRandY(obst2_height);
         obst2.src = './images/obst2.png';
         
     }
+	
+	powerup_x -= obst_speed;
+	if(score > initialPowerup) {
+		spawnPowerup();
+	}
 
     // Change to Clear Sprites
     if ( obst1_x + obst1_width / 2 < x ) {
