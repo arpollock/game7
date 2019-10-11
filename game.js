@@ -19,7 +19,7 @@ var score = 0;
 var hero = new Image();
 var hero_width = 0;
 var hero_height = 0;
-var x = canvas.width / 5;
+var x = canvas.width / 4;
 var y = groundY;
 
 hero.onload = function () {
@@ -38,12 +38,14 @@ var obst1_width = 0;
 var obst1_height = 0;
 var obst1_x = canvas.width;
 var obst1_y = 0; 
+obst1.src = './images/obst1.png';
 
 var obst2 = new Image();
 var obst2_width = 0;
 var obst2_height = 0;
 var obst2_x = canvas.width * 1.5;
 var obst2_y = 0; 
+obst2.src = './images/obst2.png';
 
 function getRandY(img_height) {
     return Math.random() * (groundY-img_height);
@@ -52,20 +54,6 @@ function getRandY(img_height) {
 function getRandX(){
     return canvas.width + Math.random() * canvas.width;
 }
-
-obst1.onload = function () {
-    obst1_height = 20; //img.height / 2;
-    obst1_width = 20 / obst1.height * obst1.width;
-    obst1_y = getRandY(obst1_height);
-}
-obst1.src = './images/obst1.png';
-
-obst2.onload = function () {
-    obst2_height = 20; //img.height / 2;
-    obst2_width = 20 / obst2.height * obst2.width;
-    obst2_y = getRandY(obst2_height);
-}
-obst2.src = './images/obst2.png';
 
 function drawHero() {
     ctx.drawImage(hero, x, y, hero_width, hero_height);
@@ -112,6 +100,12 @@ function handleKeydown(event) {
             case 32: // space
                 event.preventDefault(); // keep page from scrolling
                 if(!playing && !gameover) {
+                    obst1_height = 20; //img.height / 2;
+                    obst1_width = 20 / obst1.height * obst1.width;
+                    obst1_y = getRandY(obst1_height);
+                    obst2_height = 20; //img.height / 2;
+                    obst2_width = 20 / obst2.height * obst2.width;
+                    obst2_y = getRandY(obst2_height);
                     playing = true;
                     $('#before_play').hide();
                     gameLoop();
@@ -150,11 +144,22 @@ function gameLoop() {
         obst1_x = canvas.width + getRandX();
         obst1_y = getRandY(obst1_height);
         obst_speed *= 1.05; // obstacles get faster over time
+        obst1.src = './images/obst1.png'; // change sprite back to obstacle
     }
     obst2_x -= obst_speed;
     if(obst2_x < 0 - obst2.width) {
         obst2_x = canvas.width + getRandX();
         obst2_y = getRandY(obst2_height);
+        obst2.src = './images/obst2.png';
+        
+    }
+
+    // Change to Clear Sprites
+    if ( obst1_x + obst1_width / 2 < x ) {
+        obst1.src = './images/clear1.png';
+    }
+    if ( obst2_x + obst2_width / 2 < x ) {
+        obst2.src = './images/clear2.png';
     }
     
     drawBackground();
@@ -165,11 +170,9 @@ function gameLoop() {
 	} else {
         setTimeout(gameLoop, fps);
 	}
-    // console.log(`jumping: ${jumping}`)
 }
 
 $(document).ready( function() {
 	update_scores();
     $(this).keydown(handleKeydown);
-    // gameLoop();
 });

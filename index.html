@@ -19,25 +19,19 @@
             <div id="before_play">
                 <h2>Welcome to "Mark As Done"</h2>
                 <h3>A Mines themed 2D-platformer, side-scroller!</h3> 
-                <p>(Game Directions)</p>
-                <p>Press Spacebar to Start Playing!</p>
+                <ul class="directions">
+                    <li>Press &uarr; or {space} to jump</li>
+                    <li>Press &darr; to duck</li>
+                    <li>Hitting obstacles will result in a loss</li>
+                    <li>Try and get as far as you can!</li>
+                </ul>
+                <h4>Press Spacebar to Start Playing!</h4>
             </div>
 			<div id="after_play">
 				<h1>Game Over!</h1>
 				<p id="p_score"></p>
 				<p>Refresh the page to play again</p>
 			</div>
-            <aside class="side">
-                <h2>
-                    How to Play
-                </h2>
-                <ul id="rules">
-            		<li>Press &uarr; or {space} to jump</li>
-            		<li>Press &darr; to duck</li>
-            		<li>Hitting obstacles will result in a loss</li>
-            		<li>Try and get as far as you can!</li>
-            	</ul>
-            </aside>
             <article id="main">
                 <header>
                     <h1>Mark As Done</h1>
@@ -45,27 +39,38 @@
                 <canvas id="game"></canvas>
             </article>
             <aside class="side">
-                <h2>
-                    High Scores
-                </h2>
-				
-            	<div id="highdiv">
-					<table id="hightable">
-						<tr>
-							<th>User</th>
-							<th>Score</th>
-						</tr>
-
-					</table>
-					<table id="myhightable">
-						<tr>
-							<th colspan="2">Your High Score</th>
-						</tr>
-						<tr id="myhighscore">
-							<td colspan="2">You don't have one yet!</td>
-						</tr>
-					</table>
-				</div>
+                <div>
+                    <h2>
+                        How to Play
+                    </h2>
+                    <ul>
+                        <li>Press &uarr; or {space} to jump</li>
+                        <li>Press &darr; to duck</li>
+                        <li>Hitting obstacles will result in a loss</li>
+                        <li>Try and get as far as you can!</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>
+                        High Scores
+                    </h2>
+                    <div id="highdiv">
+                        <table id="hightable">
+                            <tr>
+                                <th>User</th>
+                                <th>Score</th>
+                            </tr>
+                        </table>
+                        <table id="myhightable">
+                            <tr>
+                                <th colspan="2">Your High Score</th>
+                            </tr>
+                            <tr id="myhighscore">
+                                <td colspan="2">You don't have one yet!</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </aside>
         </section>
         <footer>
