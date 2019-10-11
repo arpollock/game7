@@ -1,10 +1,11 @@
+// Game Control Variables
 var playing = false;
 var gameover = false;
 var fps = 30;
-// var jumpHeight = 20;
 
 // Jumping/Falling Variables
 var jumping = false;
+var ducking = false;
 var jumpVal = -8;
 var verticalSpeed = 0;
 var grav = 0.5;
@@ -14,23 +15,23 @@ var canvas = document.getElementById('game');
 var ctx = canvas.getContext('2d');
 var groundY = canvas.height * 4 / 5;
 var score = 0;
+var sprite_control = 40;
 
 // Hero Sprite Vars
 var hero = new Image();
 var hero_width = 0;
 var hero_height = 0;
-var x = canvas.width / 5;
+var x = canvas.width / 4;
 var y = groundY;
 
 hero.onload = function () {
-    hero_height = 40; //img.height / 2;
-    hero_width = 40 / hero.height * hero.width;
+    hero_height = sprite_control; 
+    hero_width = sprite_control / hero.height * hero.width;
     y -= hero_height;
 }
 hero.src = './images/hero/test.png';
 
 // Obstacle Sprite Vars
-// var obstRate = canvas.width / 5;
 var obst_speed = 6;
 
 var obst1 = new Image();
@@ -38,12 +39,14 @@ var obst1_width = 0;
 var obst1_height = 0;
 var obst1_x = canvas.width;
 var obst1_y = 0; 
+obst1.src = './images/obst1.png';
 
 var obst2 = new Image();
 var obst2_width = 0;
 var obst2_height = 0;
 var obst2_x = canvas.width * 1.5;
 var obst2_y = 0; 
+obst2.src = './images/obst2.png';
 
 function getRandY(img_height) {
     return Math.random() * (groundY-img_height);
@@ -53,22 +56,12 @@ function getRandX(){
     return canvas.width + Math.random() * canvas.width;
 }
 
-obst1.onload = function () {
-    obst1_height = 20; //img.height / 2;
-    obst1_width = 20 / obst1.height * obst1.width;
-    obst1_y = getRandY(obst1_height);
-}
-obst1.src = './images/obst1.png';
-
-obst2.onload = function () {
-    obst2_height = 20; //img.height / 2;
-    obst2_width = 20 / obst2.height * obst2.width;
-    obst2_y = getRandY(obst2_height);
-}
-obst2.src = './images/obst2.png';
-
 function drawHero() {
-    ctx.drawImage(hero, x, y, hero_width, hero_height);
+    if(!ducking) {
+        ctx.drawImage(hero, x, y, hero_width, hero_height);
+    } else {
+        ctx.drawImage(hero, x, y + hero_height / 2, hero_width, hero_height / 2);
+    }
 }
 
 function drawObsts() {
@@ -94,8 +87,18 @@ function jump() {
     }
 }
 
-function duck() {
-    alert("DUCK!!!");
+function handleKeyup(event) {
+    if(event && event.keyCode) {
+        switch(event.keyCode){
+            case 40: // down
+                if(playing) {
+                    ducking = false;
+                }
+                break;
+            default: // ignore all other keys
+                break;
+        }
+    }
 }
 
 function handleKeydown(event) {
@@ -110,12 +113,19 @@ function handleKeydown(event) {
             case 40: // down
                 event.preventDefault(); // keep page from scrolling
                 if(playing) {
-                    duck();
+                    // duck();
+                    ducking = true;
                 }
                 break;
             case 32: // space
                 event.preventDefault(); // keep page from scrolling
                 if(!playing && !gameover) {
+                    obst1_height = sprite_control / 2;
+                    obst1_width = sprite_control / 2 / obst1.height * obst1.width;
+                    obst1_y = getRandY(obst1_height);
+                    obst2_height = sprite_control / 2;
+                    obst2_width = sprite_control / 2 / obst2.height * obst2.width;
+                    obst2_y = getRandY(obst2_height);
                     playing = true;
                     $('#before_play').hide();
                     gameLoop();
@@ -154,11 +164,22 @@ function gameLoop() {
         obst1_x = canvas.width + getRandX();
         obst1_y = getRandY(obst1_height);
         obst_speed *= 1.05; // obstacles get faster over time
+        obst1.src = './images/obst1.png'; // change sprite back to obstacle
     }
     obst2_x -= obst_speed;
     if(obst2_x < 0 - obst2.width) {
         obst2_x = canvas.width + getRandX();
         obst2_y = getRandY(obst2_height);
+        obst2.src = './images/obst2.png';
+        
+    }
+
+    // Change to Clear Sprites
+    if ( obst1_x + obst1_width / 2 < x ) {
+        obst1.src = './images/clear1.png';
+    }
+    if ( obst2_x + obst2_width / 2 < x ) {
+        obst2.src = './images/clear2.png';
     }
     
     drawBackground();
@@ -170,11 +191,10 @@ function gameLoop() {
 	} else {
         setTimeout(gameLoop, fps);
 	}
-    // console.log(`jumping: ${jumping}`)
 }
 
 $(document).ready( function() {
 	update_scores();
     $(this).keydown(handleKeydown);
-    // gameLoop();
+    $(this).keyup(handleKeyup);
 });
