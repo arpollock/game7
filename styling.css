@@ -2,9 +2,12 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #57606f;
-    color: #1e90ff;
+    color: #ffffff;
     padding: 0;
     margin: 0;
+}
+header h1 {
+    text-shadow: 2px 2px 5px #1e90ff;
 }
 .pulse {
     background-color: #833471 !important;
@@ -31,6 +34,9 @@ body {
 #main {
     text-align: center;
     background-color: #dfe4ea;
+    transition-property: background-color;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
 }
 #main, .side {
     width: 100vw;
@@ -61,7 +67,7 @@ body {
 	display: none;
 	position: absolute;
     width: 500px;
-    height: 500px;
+    height: 300px;
     left: calc(50vw - 250px);
     top: calc(50vh - 150px);
     background-color: #2f3542;
@@ -70,7 +76,12 @@ body {
     box-sizing: border-box;
     text-align: center;
 }
-
+#reload {
+    display: inline-block;
+    margin: auto;
+    background-color: #1e90ff;
+    padding: 10px;
+}
 .directions {
     text-align: left;
 }

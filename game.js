@@ -6,6 +6,7 @@ var powerupTime = 8000;
 var canvas = document.getElementById('game');
 var ctx = canvas.getContext('2d');
 var groundY = canvas.height * 4 / 5;
+ctx.font = "12px Arial";
 var score = 0;
 var sprite_control = 40;
 var initialPowerup = Math.random() * powerupTime / 10 + powerupTime;
@@ -125,7 +126,6 @@ function animateHero() {
 }
 
 function animatePowerup() {
-    // TODO
     let animateTime = 200;
     showPowerupText = true;
     $('#main').addClass('pulse');
@@ -150,6 +150,7 @@ function animatePowerup() {
 function drawBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = floorColor;
+    ctx.fillText(`Score: ${score}`, 10, 20);
     ctx.fillRect( 0, groundY, canvas.width, canvas.height - groundY);
 }
 
@@ -300,4 +301,7 @@ $(document).ready( function() {
 	update_scores();
     $(this).keydown(handleKeydown);
     $(this).keyup(handleKeyup);
+    $('#reload').click(function(){
+        window.location.reload();
+    });
 });

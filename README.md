@@ -6,4 +6,11 @@
 asdfghjk
 
 #### CSS3 Features Used ####
-asdfghjk
+Image border on #game canvas
+
+transition-property: background-color;
+transition-duration: 0.1s;
+transition-timing-function: ease-in-out;
+on #main 
+
+text-shadow on header h1
