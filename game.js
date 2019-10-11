@@ -269,9 +269,6 @@ function gameLoop() {
         powerupSpawned = false;
         setTimeout( spawnPowerup, Math.random() * powerupTime + 10000 );
     }
-    if ( obst1_x < obst2_x + obst2_width + 10 && obst1_x + obst1_width > obst2_width - 10 ) {
-        obst2_x += canvas.width / 10;
-    }
     // Change to Clear Sprites
     if ( obst1_x + obst1_width / 2 < x ) {
         obst1.src = './images/clear1.png';
