@@ -78,8 +78,9 @@ function jump() {
     }
 }
 
-function duck() {
-    alert("DUCK!!!");
+function duck() { 
+    ctx.clearRect(x, y, hero_width, hero_height);
+    ctx.drawImage(hero, x, y + hero_height/2, hero_width, hero_height/2);
 }
 
 function handleKeydown(event) {
