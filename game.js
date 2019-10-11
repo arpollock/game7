@@ -182,7 +182,6 @@ function gameLoop() {
         obst2_x = canvas.width + getRandX();
         obst2_y = getRandY(obst2_height);
         obst2.src = './images/obst2.png';
-        
     }
 
     // Change to Clear Sprites
