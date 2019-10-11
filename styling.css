@@ -9,9 +9,6 @@ body {
 .pulse {
     background-color: #833471 !important;
 }
-h1, .side h2 {
-    margin-top: 0;
-}
 #wrapper {
     margin: 0;
     width: 100%;
@@ -27,6 +24,9 @@ h1, .side h2 {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+.side h2 {
+    margin-top: 0;
 }
 #main {
     text-align: center;

@@ -16,26 +16,10 @@
     <body>
         <!-- This content is seen on the main viewport -->
         <section id="wrapper">
-            <div id="before_play">
-                <h2>Welcome to "Mark As Done"</h2>
-                <h3>A Mines themed 2D-platformer, side-scroller!</h3> 
-                <ul class="directions">
-                    <li>Press &uarr; or {space} to jump</li>
-                    <li>Press &darr; to duck</li>
-                    <li>Hitting obstacles will result in a loss, but try and catch the mighty Paone Power Up!</li>
-                    <li>Try and get as far as you can!</li>
-                </ul>
-                <h4>Press Spacebar to Start Playing!</h4>
-            </div>
-			<div id="after_play">
-				<h1>Game Over!</h1>
-				<p id="p_score"></p>
-				<p>Refresh the page to play again</p>
-			</div>
+            <header>
+                <h1>Mark As Done</h1>
+            </header>
             <article id="main">
-                <header>
-                    <h1>Mark As Done</h1>
-                </header>
                 <canvas id="game"></canvas>
             </article>
             <aside class="side">
@@ -72,10 +56,26 @@
                     </div>
                 </div>
             </aside>
+            <div id="before_play">
+                <h2>Welcome to "Mark As Done"</h2>
+                <h3>A Mines themed 2D-platformer, side-scroller!</h3> 
+                <ul class="directions">
+                    <li>Press &uarr; or {space} to jump</li>
+                    <li>Press &darr; to duck</li>
+                    <li>Hitting obstacles will result in a loss, but try and catch the mighty Paone Power Up!</li>
+                    <li>Try and get as far as you can!</li>
+                </ul>
+                <h4>Press Spacebar to Start Playing!</h4>
+            </div>
+            <div id="after_play">
+                <h1>Game Over!</h1>
+                <p id="p_score"></p>
+                <p>Refresh the page to play again</p>
+            </div>
         </section>
         <footer>
         </footer>
-		<script type="text/javascript" src="./HighscoreAPI.js"></script>
+		<script src="./HighscoreAPI.js"></script>
         <script src="./game.js"></script>
     </body>
 </html>
